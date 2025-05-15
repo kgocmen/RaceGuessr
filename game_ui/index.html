@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guess the Ancestry Map Game</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    body { margin: 0; font-family: sans-serif; position: relative; }
+    #map { height: 100vh; width: 100vw; }
+    .info-panel {
+      width: 22vw;
+      height: 97vh;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: #f9f9f9;
+      padding: 10px;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      overflow-y: hidden;
+      z-index: 999;
+    }
+    .info-box, .scoreboard, .result-box, .guess-box {
+      background: white;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 4px 6px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    .blink {
+      animation: blinker 1s linear infinite;
+    }
+    @keyframes blinker {
+      50% { opacity: 0.5; }
+    }
+    .custom-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px 10px;
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="info-panel">
+  <div class="info-box" id="mixBox">
+    <strong>Current Mix:</strong>
+    <div>
+      <label for="regionSelect">Round Type:</label>
+      <select id="regionSelect" onchange="toggleCustomOptions()">
+        <option value="1">Single Region</option>
+        <option value="2">Multiple Regions</option>
+        <option value="3">Majority Regions</option>
+        <option value="4" selected>Global</option>
+        <option value="5">Random</option>
+        <option value="6">Custom</option>
+      </select>
+    </div>
+    <div id="customRegions" class="custom-grid" style="margin-top: 5px; display: none;">
+      <label style="color: blue; font-weight: bold;"><input type="checkbox" value="1"> European</label>
+      <label style="color: brown; font-weight: bold;"><input type="checkbox" value="2"> MENA</label>
+      <label style="color: red; font-weight: bold;"><input type="checkbox" value="3"> WACA</label>
+      <label style="color: orange; font-weight: bold;"><input type="checkbox" value="4"> EASEA</label>
+      <label style="color: cyan; font-weight: bold;"><input type="checkbox" value="5"> Siberian</label>
+      <label style="color: purple; font-weight: bold;"><input type="checkbox" value="6"> American</label>
+      <label style="color: magenta; font-weight: bold;"><input type="checkbox" value="7"> SAO</label>
+      <label style="color: darkgreen; font-weight: bold;"><input type="checkbox" value="8"> SSA</label>
+    </div>
+    <button onclick="startNewRound()">New Round</button>
+    <div id="mixDescription">Click "New Round" to start</div>
+  </div>
+  <div class="guess-box" id="guessBox" style="display: none;">
+    <input type="text" id="guessInput" list="popSuggestions" placeholder="Type a population name..." style="width: 100%; padding: 6px;" />
+    <button id="submitBtn" onclick="submitTypedGuess()" style="margin-top: 5px; width: 100%; display: none;">Submit Guess</button>
+  </div>
+  <div class="result-box" id="resultBox" style="display: none;">
+    <strong>Top 10 Closest:</strong>
+    <table id="resultTable">
+      <thead><tr><th>Population</th><th>Distance</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div id="resultMessage"></div>
+  </div>
+  <div class="scoreboard">
+    <strong>Score:</strong> <span id="score">0</span>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+  let totalScore = 0;
+  let populationLayer;
+  let markers = {};
+  let hasGuessed = false;
+  let mapClickable = false;
+
+  const regionColors = {
+    "European": "blue",
+    "SSA": "darkgreen",
+    "EASEA": "orange",
+    "Siberian": "cyan",
+    "American": "purple",
+    "SAO": "magenta",
+    "MENA": "brown",
+    "WACA": "red",
+    "default": "gray"
+  };
+
+  const map = L.map('map').setView([30, 20], 2);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  fetch('ne_110m_land.geojson')
+    .then(res => res.json())
+    .then(data => {
+      L.geoJSON(data, {
+        style: { color: '#999', weight: 1, fillColor: '#ddd', fillOpacity: 0.6 }
+      }).addTo(map);
+    });
+
+  fetch('illu_modern_points.geojson')
+    .then(res => res.json())
+    .then(data => {
+      populationLayer = L.geoJSON(data, {
+        pointToLayer: (feature, latlng) => {
+          const region = feature.properties.Region || "default";
+          const marker = L.circleMarker(latlng, {
+            radius: 5,
+            fillColor: regionColors[region] || regionColors.default,
+            color: '#000',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.9
+          });
+          markers[feature.properties.Population] = marker;
+          return marker;
+        },
+        onEachFeature: (feature, layer) => {
+          const name = feature.properties.Population;
+          const region = feature.properties.Region;
+          layer.bindTooltip(`<strong>${name}</strong><br>Region: ${region}`);
+          layer.on('click', () => {
+            if (mapClickable) submitGuess(name);
+          });
+        }
+      }).addTo(map);
+
+      const popList = data.features.map(f => f.properties.Population);
+      const datalist = document.createElement('datalist');
+      datalist.id = 'popSuggestions';
+      popList.forEach(pop => {
+        const option = document.createElement('option');
+        option.value = pop;
+        datalist.appendChild(option);
+      });
+      document.body.appendChild(datalist);
+      document.getElementById("guessInput").setAttribute("list", "popSuggestions");
+    });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const guessInput = document.getElementById("guessInput");
+    if (guessInput) {
+      guessInput.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          submitTypedGuess();
+        }
+      });
+    }
+  });
+
+  function toggleCustomOptions() {
+    const selected = document.getElementById("regionSelect").value;
+    document.getElementById("customRegions").style.display = selected === "6" ? "block" : "none";
+  }
+
+  function submitTypedGuess() {
+    if (hasGuessed) {
+      alert("You already guessed this round!");
+      return;
+    }
+    const input = document.getElementById("guessInput").value.trim();
+    if (input !== "") submitGuess(input);
+  }
+
+  function startNewRound() {
+    const regionType = document.getElementById("regionSelect").value;
+    let url = `/next_round?type=${regionType}`;
+
+    if (regionType === "6") {
+      const selected = Array.from(document.querySelectorAll("#customRegions input:checked")).map(cb => cb.value);
+      if (selected.length === 0) {
+        alert("Please select at least one region.");
+        return;
+      }
+      url += `&custom=${selected.join('-')}`;
+    }
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.mix_description) {
+          alert(data.error || "Server error. Please try again.");
+          return;
+        }
+
+        const descBox = document.getElementById("mixDescription");
+
+        const mixLines = Object.entries(data.mix_description)
+          .map(([k, v]) => `${k}: ${Math.round(v * 100)}%`);
+
+        if (data.regions && Array.isArray(data.regions)) {
+          const coloredRegions = data.regions.map(region => {
+            const color = regionColors[region] || regionColors.default;
+            return `<span style="color:${color}; font-weight:500; font-size:0.8em;">${region}</span>`;
+          });
+          const grouped = coloredRegions.join(' ');
+          mixLines.unshift(`<em>${grouped}</em>`);
+        }
+
+        descBox.innerHTML = mixLines.join("<br>");
+
+        document.getElementById("resultBox").style.display = "none";
+        document.getElementById("submitBtn").style.display = "block";
+        document.getElementById("submitBtn").disabled = false;
+        document.getElementById("guessInput").disabled = false;
+        document.getElementById("guessBox").style.display = "block";
+        document.getElementById("guessInput").value = "";
+        mapClickable = true;
+        hasGuessed = false;
+
+        Object.keys(markers).forEach(k => {
+          markers[k].setStyle({
+            radius: 5,
+            fillColor: regionColors[markers[k].feature?.properties.Region] || regionColors.default
+          });
+          const el = markers[k].getElement();
+          if (el) el.classList.remove("blink");
+        });
+        populationLayer.eachLayer(layer => {
+        const name = layer.feature.properties.Population;
+          layer.on("click", () => submitGuess(name));
+        });
+
+
+        Object.entries(data.mix_description).forEach(([pop, _]) => {
+          if (markers[pop]) {
+            markers[pop].setStyle({ fillColor: "gold", radius: 9 });
+          }
+        });
+      })
+      .catch(err => {
+        console.error("Error in startNewRound():", err);
+        alert("Failed to start new round.");
+      });
+  }
+
+  function submitGuess(name) {
+    fetch('/submit_guess', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guess: name })
+    })
+      .then(res => res.json())
+      .then(result => {
+        if (!result.top10 || !Array.isArray(result.top10)) {
+          alert("Error: Game round not initialized or result is malformed. Please click 'New Round' first.");
+          return;
+        }
+
+        hasGuessed = true;
+        mapClickable = false;
+        document.getElementById("submitBtn").style.display = "none";
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("guessInput").disabled = true;
+        populationLayer.eachLayer(layer => {
+          layer.off("click");
+        });
+
+        totalScore += result.score || 0;
+        document.getElementById("score").innerText = totalScore;
+        const table = document.querySelector("#resultTable tbody");
+        table.innerHTML = "";
+
+        result.top10.forEach((entry, i) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${i + 1}. ${entry.Population}</td><td>${entry.Distance.toFixed(4)}</td>`;
+          table.appendChild(row);
+          if (i < 3 && markers[entry.Population]) {
+            markers[entry.Population].setStyle({fillColor: "lime" });
+            markers[entry.Population].getElement()?.classList.add("blink");
+          }
+        });
+        document.getElementById("resultMessage").innerHTML =
+        `<div style="font-size: 0.8em;"><em>Your Guess:</em> ${result.rank}. ${result.guess} (${result.score} points!) ${result.distance?.toFixed(4) ?? '?'}</div>`;
+        document.getElementById("resultBox").style.display = "block";
+      })
+      .catch(err => {
+        console.error("Error submitting guess:", err);
+        alert("Server error or game not started. Please click 'New Round' first.");
+      });
+  }
+</script>
+</body>
+</html>
