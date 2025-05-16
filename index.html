@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guess the Ancestry Map Game</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script type="module" crossorigin src="/RaceGuessr/assets/index-C32On1MC.js"></script>
+  <link rel="stylesheet" crossorigin href="/RaceGuessr/assets/index-B_v6-0rp.css">
+</head>
+<body>
+  <div id="map"></div>
+  <div class="info-panel">
+    <div class="info-box" id="mixBox">
+      <strong>Current Mix:</strong>
+      <div>
+        <label for="regionSelect">Round Type:</label>
+        <select id="regionSelect">
+          <option value="1">Single Region</option>
+          <option value="2">Multiple Regions</option>
+          <option value="3">Majority Regions</option>
+          <option value="4" selected>Global</option>
+          <option value="5">Random</option>
+          <option value="6">Custom</option>
+        </select>
+      </div>
+      <div id="customRegions" class="custom-grid" style="margin-top: 5px; display: none;">
+        <div class="grid-row">
+          <label style="color: blue; font-weight: bold;"><input type="checkbox" value="European"> European</label>
+          <label style="color: brown; font-weight: bold;"><input type="checkbox" value="MENA"> MENA</label>
+          <label style="color: red; font-weight: bold;"><input type="checkbox" value="WACA"> WACA</label>
+          <label style="color: orange; font-weight: bold;"><input type="checkbox" value="EASEA"> EASEA</label>
+        </div>
+        <div class="grid-row">
+          <label style="color: cyan; font-weight: bold;"><input type="checkbox" value="Siberian"> Siberian</label>
+          <label style="color: purple; font-weight: bold;"><input type="checkbox" value="American"> American</label>
+          <label style="color: magenta; font-weight: bold;"><input type="checkbox" value="SAO"> SAO</label>
+          <label style="color: darkgreen; font-weight: bold;"><input type="checkbox" value="SSA"> SSA</label>
+        </div>
+      </div>
+      <button id="newRoundBtn">New Round</button>
+      <div id="mixDescription">Click "New Round" to start</div>
+    </div>
+    <div class="guess-box" id="guessBox" style="display: none;">
+      <input type="text" id="guessInput" list="popSuggestions" placeholder="Type a population name..." style="width: 100%; padding: 6px;" />
+      <button id="submitBtn" style="margin-top: 5px; width: 100%; display: none;">Submit Guess</button>
+    </div>
+    <div class="result-box" id="resultBox" style="display: none;">
+      <strong>Top 10 Closest:</strong>
+      <table id="resultTable">
+        <thead><tr><th>Population</th><th>Distance</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div id="resultMessage"></div>
+    </div>
+    <div class="scoreboard">
+      <strong>Score:</strong> <span id="score">0</span>
+    </div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+</html>
