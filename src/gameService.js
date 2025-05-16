@@ -76,7 +76,8 @@ export function calculateGuess(guess) {
   if (top10Names.includes(guess)) {
     score = SCORES[top10Names.indexOf(guess)];
   } else {
-    score = computeFallbackScore(guess, vector, results);
+    console.log("here")
+    score = computeFallbackScore(guess, results);
   }
 
   addScore(score);
