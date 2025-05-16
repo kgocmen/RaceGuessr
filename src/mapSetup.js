@@ -29,7 +29,7 @@ export function initializeMap() {
       }).addTo(map);
     });
 
-  `${import.meta.env.BASE_URL}illu_modern_points.geojson`
+  fetch(`${import.meta.env.BASE_URL}illu_modern_points.geojson`)
     .then(res => res.json())
     .then(data => {
       populationLayer = L.geoJSON(data, {
