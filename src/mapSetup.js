@@ -21,13 +21,14 @@ export function initializeMap() {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
+  /*   
   fetch(`${import.meta.env.BASE_URL}ne_110m_land.geojson`)
     .then(res => res.json())
     .then(data => {
       L.geoJSON(data, {
         style: { color: '#999', weight: 1, fillColor: '#ddd', fillOpacity: 0.6 }
       }).addTo(map);
-    });
+    }); */
 
   fetch(`${import.meta.env.BASE_URL}illu_modern_points.geojson`)
     .then(res => res.json())
