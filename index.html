@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-  <script type="module" crossorigin src="/RaceGuessr/assets/index-CpqjYhNx.js"></script>
+  <script type="module" crossorigin src="/RaceGuessr/assets/index-CDYkoUPa.js"></script>
   <link rel="stylesheet" crossorigin href="/RaceGuessr/assets/index-B-6AxPBj.css">
 </head>
 <body>
@@ -25,22 +25,33 @@
           <option value="6">Custom</option>
         </select>
       </div>
-      <div id="customRegions" class="custom-grid" style="margin-top: 5px; display: none;">
-        <div class="grid-row">
-          <label style="color: blue; font-weight: bold;"><input type="checkbox" value="European"> European</label>
-          <label style="color: brown; font-weight: bold;"><input type="checkbox" value="MENA"> MENA</label>
-          <label style="color: red; font-weight: bold;"><input type="checkbox" value="WACA"> WACA</label>
-          <label style="color: orange; font-weight: bold;"><input type="checkbox" value="EASEA"> EASEA</label>
+      <div id="customRegions" class="custom-grid" style="margin-top: 5px; display: none; font-size: 0.8em;">
+        <div class="grid-row" style="gap: 6px;">
+          <label style="color: blue; font-weight: 500;"><input type="checkbox" value="European" style="transform: scale(0.8);"> European</label>
+          <label style="color: brown; font-weight: 500;"><input type="checkbox" value="MENA" style="transform: scale(0.8);"> MENA</label>
+          <label style="color: red; font-weight: 500;"><input type="checkbox" value="WACA" style="transform: scale(0.8);"> WACA</label>
+          <label style="color: orange; font-weight: 500;"><input type="checkbox" value="EASEA" style="transform: scale(0.8);"> EASEA</label>
         </div>
-        <div class="grid-row">
-          <label style="color: cyan; font-weight: bold;"><input type="checkbox" value="Siberian"> Siberian</label>
-          <label style="color: purple; font-weight: bold;"><input type="checkbox" value="American"> American</label>
-          <label style="color: magenta; font-weight: bold;"><input type="checkbox" value="SAO"> SAO</label>
-          <label style="color: darkgreen; font-weight: bold;"><input type="checkbox" value="SSA"> SSA</label>
+        <div class="grid-row" style="gap: 6px;">
+          <label style="color: cyan; font-weight: 500;"><input type="checkbox" value="Siberian" style="transform: scale(0.8);"> Siberian</label>
+          <label style="color: purple; font-weight: 500;"><input type="checkbox" value="American" style="transform: scale(0.8);"> American</label>
+          <label style="color: magenta; font-weight: 500;"><input type="checkbox" value="SAO" style="transform: scale(0.8);"> SAO</label>
+          <label style="color: darkgreen; font-weight: 500;"><input type="checkbox" value="SSA" style="transform: scale(0.8);"> SSA</label>
         </div>
       </div>
-      <button id="newRoundBtn">New Round</button>
-      <div id="mixDescription">Click "New Round" to start</div>
+
+      <div id="modeButtons">
+        <button id="practiceBtn">Practice</button>
+        <button id="competeBtn">Compete</button>
+      </div>
+
+      <div id="competeControls" style="display: none;">
+        <button id="nextRoundBtn" disabled>Next Round</button>
+        <button id="quitBtn">Quit</button>
+        <div id="roundCounter">Round: 1 / 10</div>
+      </div>
+
+      <div id="mixDescription">Click "Practice" or "Compete"</div>
     </div>
     <div class="guess-box" id="guessBox" style="display: none;">
       <input type="text" id="guessInput" list="popSuggestions" placeholder="Type a population name..." style="width: 100%; padding: 6px;" />
@@ -59,6 +70,13 @@
       <strong>Score:</strong> <span id="score">0</span>
     </div>
   </div>
+  <!-- Final Result Popup -->
+  <div id="finalResultPopup" style="display:none; position:fixed; top:30%; left:50%; transform:translateX(-50%); background:white; padding:20px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.4); z-index:10000; text-align:center;">
+    <div id="finalResultText" style="font-size:1.2em; font-weight:bold;"></div>
+    <div id="finalResultSubtext" style="margin-top:8px; font-size:0.95em;"></div>
+    <button onclick="document.getElementById('finalResultPopup').style.display='none'" style="margin-top:10px;">Close</button>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
