@@ -14,7 +14,8 @@ let currentState = {
 };
 
 export async function loadGeoJSON() {
-  const res = await fetch('illu_modern_points.geojson');
+  const url = `${import.meta.env.BASE_URL}illu_modern_points.geojson`;
+  const res = await fetch(url);
   const data = await res.json();
   allPopulations = data.features.map(f => ({
     name: f.properties.Population,
