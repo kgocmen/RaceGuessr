@@ -1,5 +1,13 @@
-body { margin: 0; font-family: sans-serif; position: relative; }
-#map { height: 100vh; width: 100vw; }
+body {
+  margin: 0;
+  font-family: sans-serif;
+  position: relative;
+}
+
+#map {
+  height: 100vh;
+  width: 100vw;
+}
 
 .info-panel {
   width: 22vw;
@@ -10,11 +18,30 @@ body { margin: 0; font-family: sans-serif; position: relative; }
   background: #f9f9f9;
   padding: 10px;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  overflow-y: hidden;
+  overflow-y: auto;
   z-index: 999;
 }
 
-.info-box, .scoreboard, .result-box, .guess-box {
+/* 📱 Mobile override */
+@media (max-width: 768px) {
+  .info-panel {
+    position: static;
+    width: 100vw;
+    height: auto;
+    box-shadow: none;
+    padding: 8px;
+    overflow-y: visible;
+  }
+
+  #map {
+    height: 60vh; /* less than full height to leave room for panel */
+  }
+}
+
+.info-box,
+.scoreboard,
+.result-box,
+.guess-box {
   background: white;
   margin-bottom: 15px;
   padding: 10px;
@@ -27,20 +54,25 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 4px 6px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-th { background: #f0f0f0; }
+th {
+  background: #f0f0f0;
+}
 
 .blink {
   animation: blinker 1s linear infinite;
 }
 
 @keyframes blinker {
-  50% { opacity: 0.5; }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .custom-grid {
