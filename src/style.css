@@ -48,3 +48,9 @@ th { background: #f0f0f0; }
   grid-template-columns: repeat(2, 1fr);
   gap: 4px 10px;
 }
+
+#guessInput {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}

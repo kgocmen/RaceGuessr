@@ -1,6 +1,7 @@
 // uiControls.js
 import { resetMarkers, markers } from './mapSetup.js';
 import { totalScore } from './state.js';
+import { populationNames } from './gameService.js';
 
 export function setupUIEvents() {
   document.getElementById("regionSelect").addEventListener("change", toggleCustomOptions);
@@ -49,13 +50,30 @@ export function updateResultsUI(result) {
     const row = document.createElement("tr");
     row.innerHTML = `<td>${i + 1}. ${entry.name}</td><td>${entry.distance.toFixed(4)}</td>`;
     table.appendChild(row);
-    if (i < 3 && markers[entry.Population]) {
-      markers[entry.Population].setStyle({ fillColor: "lime" });
-      markers[entry.Population].getElement()?.classList.add("blink");
+    if (i < 3 && markers[entry.name]) {
+      const radius = [9, 7, 5][i]; // size for 1st, 2nd, 3rd
+      markers[entry.name].setStyle({
+        fillColor: "lime",
+        radius: radius
+      });
+      markers[entry.name].getElement()?.classList.add("blink");
     }
+
+
   });
 
   document.getElementById("resultMessage").innerHTML =
     `<div style="font-size: 0.8em;"><em>Your Guess:</em> ${result.rank}. ${result.guess} (${result.score} points!) ${result.distance?.toFixed(4) ?? '?'}</div>`;
   document.getElementById("resultBox").style.display = "block";
+}
+
+export function setupAutocomplete() {
+  const datalist = document.getElementById("popSuggestions");
+  datalist.innerHTML = ""; // clear existing options
+
+  populationNames.forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    datalist.appendChild(option);
+  });
 }

@@ -5,6 +5,7 @@ import { addScore } from './state.js';
 let allPopulations = [];
 let pcColumns = Array.from({ length: 25 }, (_, i) => `PC${i + 1}`);
 
+export let populationNames = [];
 let currentState = {
   vector: null,
   results: null,
@@ -13,7 +14,7 @@ let currentState = {
 };
 
 export async function loadGeoJSON() {
-  const res = await fetch('/illu_modern_points.geojson');
+  const res = await fetch('illu_modern_points.geojson');
   const data = await res.json();
   allPopulations = data.features.map(f => ({
     name: f.properties.Population,
@@ -21,6 +22,7 @@ export async function loadGeoJSON() {
     coords: f.geometry.coordinates,
     vector: pcColumns.map(key => f.properties[key])
   }));
+  populationNames = allPopulations.map(p => p.name);
 }
 
 export async function fetchNewRound(regionType, customRegions = []) {
@@ -70,7 +72,6 @@ export function calculateGuess(guess) {
   const distance = entry?.distance ?? null;
 
   let score;
-  let message;
   if (top10Names.includes(guess)) {
     score = SCORES[top10Names.indexOf(guess)];
   } else {

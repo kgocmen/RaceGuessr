@@ -21,7 +21,7 @@ export function initializeMap() {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  fetch('/ne_110m_land.geojson')
+  fetch('ne_110m_land.geojson')
     .then(res => res.json())
     .then(data => {
       L.geoJSON(data, {
@@ -29,7 +29,7 @@ export function initializeMap() {
       }).addTo(map);
     });
 
-  fetch('/illu_modern_points.geojson')
+  fetch('illu_modern_points.geojson')
     .then(res => res.json())
     .then(data => {
       populationLayer = L.geoJSON(data, {

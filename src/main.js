@@ -1,12 +1,17 @@
 import { initializeMap } from './mapSetup.js';
-import { setupUIEvents } from './uiControls.js';
+import { setupUIEvents, setupAutocomplete } from './uiControls.js';
 import { startNewRound, submitGuess } from './gameLogic.js';
 import { getHasGuessed, getMapClickable } from './state.js';
+import { loadGeoJSON } from './gameService.js';
 import './style.css';
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
+  await loadGeoJSON();           // ✅ Load population data first
+  setupAutocomplete();           // ✅ Fill <datalist> with names
+
   initializeMap();
   setupUIEvents();
+
 
   // Helper to handle guessing logic
   function handleSubmit() {
