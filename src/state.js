@@ -27,3 +27,7 @@ export function getMapClickable() {
 export function addScore(score) {
   totalScore += score;
 }
+
+export function resetTotalScore() {
+  totalScore = 0;
+}

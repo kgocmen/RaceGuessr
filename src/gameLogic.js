@@ -36,7 +36,7 @@ export async function startNewRound() {
 
     Object.entries(data.mix_description).forEach(([pop]) => {
       if (markers[pop]) {
-        markers[pop].setStyle({ fillColor: "gold", radius: 9 });
+        markers[pop].setStyle({ fillColor: "gold", radius: 10 });
       }
     });
   } catch (err) {

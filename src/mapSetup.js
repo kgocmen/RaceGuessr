@@ -37,7 +37,7 @@ export function initializeMap() {
         pointToLayer: (feature, latlng) => {
           const region = feature.properties.Region || "default";
           const marker = L.circleMarker(latlng, {
-            radius: 5,
+            radius: 6,
             fillColor: regionColors[region] || regionColors.default,
             color: '#000', weight: 1, opacity: 1, fillOpacity: 0.9
           });
@@ -60,7 +60,7 @@ export function initializeMap() {
 export function resetMarkers() {
   Object.keys(markers).forEach(k => {
     markers[k].setStyle({
-      radius: 5,
+      radius: 6,
       fillColor: regionColors[markers[k].feature?.properties.Region] || regionColors.default
     });
     const el = markers[k].getElement();
