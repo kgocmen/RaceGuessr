@@ -13,6 +13,23 @@ window.addEventListener("DOMContentLoaded", async () => {
   setupUIEvents();
   setupModeButtons();
 
+  // Welcome pop-up
+  const popup = document.getElementById("howToPlayPopup");
+  const introSeen = localStorage.getItem("seenIntro");
+
+  if (!introSeen && popup) {
+    popup.style.display = "flex";
+    setTimeout(() => popup.classList.add("visible"), 10); // trigger fade-in
+    // only store after it’s dismissed
+    document.getElementById("popupCloseBtn")?.addEventListener("click", () => {
+      popup.style.display = "none";
+      localStorage.setItem("seenIntro", "true");
+    });
+  }
+
+
+
+
 
   // Helper to handle guessing logic
   function handleSubmit() {
@@ -62,3 +79,28 @@ window.submitGuess = (name) => {
   }
   submitGuess(name);
 };
+
+window.showPopupPage = function(n) {
+  for (let i = 1; i <= 3; i++) {
+    const page = document.getElementById(`popupPage${i}`);
+    if (page) {
+      page.style.display = i === n ? "block" : "none";
+      if (i === n) page.classList.add("slide-in");
+    }
+  }
+};
+
+function showHowToPlayPopup() {
+  const popup = document.getElementById("howToPlayPopup");
+  popup.style.display = "flex";
+  setTimeout(() => popup.classList.add("visible"), 10);
+}
+
+// Always show during development
+showHowToPlayPopup();
+
+// Close on ✕ or Got it!
+document.getElementById("popupCloseBtn")?.addEventListener("click", () => {
+  document.getElementById("howToPlayPopup").style.display = "none";
+});
+

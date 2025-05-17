@@ -57,10 +57,19 @@ export function updateResultsUI(result) {
     const color = getColorByDistance(entry.distance);
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-      <td>${i + 1}. ${entry.name}</td>
-      <td style="color:${color}">${entry.distance.toFixed(4)}</td>
-    `;
+    if (result.rank === i + 1) {
+
+      row.innerHTML = `
+        <td><strong>${i + 1}. ${result.guess}</strong><br>(${result.score} points!)</td>
+        <td style="color:${color}"><strong>${result.distance?.toFixed(4) ?? '?'}</strong></td>
+      </tr>`;
+    } else {
+      row.innerHTML = `
+        <td>${i + 1}. ${entry.name}</td>
+        <td style="color:${color}">${entry.distance.toFixed(4)}</td>
+      </tr>`;
+    }
+
     table.appendChild(row);
 
     if (i < 5 && markers[entry.name]) {
@@ -73,14 +82,15 @@ export function updateResultsUI(result) {
     }
   });
 
-
-  const guessColor = getColorByDistance(result.distance);
-  const guessRow = document.createElement("tr");
-  guessRow.innerHTML = `
-    <td><strong>${result.rank}. ${result.guess}</strong>  (${result.score} points!)</td>
-    <td style="color:${guessColor}"><strong>${result.distance?.toFixed(4) ?? '?'}</strong></td>
-  `;
-  table.appendChild(guessRow);
+  if (result.rank > 10) {
+    const guessColor = getColorByDistance(result.distance);
+    const guessRow = document.createElement("tr");
+    guessRow.innerHTML = `
+      <td><strong>${result.rank}. ${result.guess}</strong><br>(${result.score} points!)</td>
+      <td style="color:${guessColor}"><strong>${result.distance?.toFixed(4) ?? '?'}</strong></td>
+    </tr>`;
+    table.appendChild(guessRow);
+  }
 
 
   document.getElementById("resultBox").style.display = "block";
