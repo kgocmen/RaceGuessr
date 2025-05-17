@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-  <script type="module" crossorigin src="/RaceGuessr/assets/index-CDYkoUPa.js"></script>
-  <link rel="stylesheet" crossorigin href="/RaceGuessr/assets/index-B-6AxPBj.css">
+  <script type="module" crossorigin src="/RaceGuessr/assets/index-Age4woa0.js"></script>
+  <link rel="stylesheet" crossorigin href="/RaceGuessr/assets/index-B9FblDfW.css">
 </head>
 <body>
   <div id="map"></div>
@@ -76,6 +76,64 @@
     <div id="finalResultSubtext" style="margin-top:8px; font-size:0.95em;"></div>
     <button onclick="document.getElementById('finalResultPopup').style.display='none'" style="margin-top:10px;">Close</button>
   </div>
+
+<!-- Welcome Popup -->
+<div id="howToPlayPopup">
+  <div class="popup-container">
+  <button id="popupCloseBtn" class="popup-close">✕</button>
+
+    <!-- Page 1: Intro -->
+    <div id="popupPage1">
+      <h2>How to Play</h2>
+      <p>
+        Welcome to <strong>RaceGuessr</strong>!<br><br>
+        Each round shows a synthetic mix of genetic ancestry.<br>
+        Your goal is to <strong>guess the closest modern population</strong>.<br>
+        Click the map or type a population name.<br><br>
+        <strong>Practice Mode:</strong> Try as many rounds as you like.<br>
+        <strong>Compete Mode:</strong> Guess through 10 rounds and get a final score!<br><br>
+        Good luck!
+      </p>
+      <button class="popup-btn" onclick="showPopupPage(2)">Next →</button>
+    </div>
+
+    <!-- Page 2: Regions -->
+    <div id="popupPage2" style="display: none;">
+      <h2>Regions and Their Colors</h2>
+      <ul class="region-legend">
+        <li><span class="dot" style="background: blue;"></span> European</li>
+        <li><span class="dot" style="background: brown;"></span> Middle Eastern and North African</li>
+        <li><span class="dot" style="background: red;"></span> West Asian and Central Asian</li>
+        <li><span class="dot" style="background: orange;"></span> East Asian and Southeast Asian</li>
+        <li><span class="dot" style="background: cyan;"></span> Siberian</li>
+        <li><span class="dot" style="background: purple;"></span> American</li>
+        <li><span class="dot" style="background: magenta;"></span> South Asia and Oceania</li>
+        <li><span class="dot" style="background: darkgreen;"></span> Sub Saharan African</li>
+      </ul>
+      <div class="popup-actions">
+        <button class="popup-btn" onclick="showPopupPage(1)">← Back</button>
+        <button class="popup-btn" onclick="showPopupPage(3)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Round Types -->
+    <div id="popupPage3" style="display: none;">
+      <h2>Round Types</h2>
+        <strong>Single Region:</strong> Only samples from one region.</br>
+        <strong>Multiple Regions:</strong> Samples from 2–4 neighboring regions.</br>
+        <strong>Majority Regions:</strong> 50% of the mix from selected core regions.</br>
+        <strong>Global:</strong> Includes any population.</br>
+        <strong>Random:</strong> Picks from one of the above types at random.</br>
+        <strong>Custom:</strong> You select which regions (256 possible combos).</br>
+      
+      <div class="popup-actions">
+        <button class="popup-btn" onclick="showPopupPage(2)">← Back</button>
+        <button class="popup-btn" onclick="document.getElementById('howToPlayPopup').style.display = 'none'">Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
