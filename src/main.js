@@ -54,26 +54,16 @@ window.addEventListener("DOMContentLoaded", async () => {
     submitGuess(matchedName);
   }
 
-  // Bind input enter key
+
   const guessInput = document.getElementById("guessInput");
-  guessInput?.addEventListener("keypress", (e) => {
+
+  guessInput?.addEventListener("keydown", (e) => {
+    // Enter = submit
     if (e.key === "Enter") {
-      if (getHasGuessed()) {
-        const nextBtn = document.getElementById("nextRoundBtn");
-        if (nextBtn && !nextBtn.disabled) {
-          nextBtn.click(); // automatically advance if in compete mode
-        }
-        const pracBtn = document.getElementById("practiceBtn");
-        if (pracBtn && !pracBtn.disabled) {
-          pracBtn.click(); // automatically advance if in practice mode
-        }
-      } else {
-        handleSubmit(); // normal guess submission
-      }
+      handleSubmit();
     }
-  });
-  // Tab
-  guessInput.addEventListener("keydown", (e) => {
+
+    // Tab = autocomplete
     if (e.key === "Tab") {
       const options = document.querySelectorAll("#popSuggestions option");
       for (const option of options) {
@@ -94,11 +84,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("regionSelect")?.addEventListener("change", () => {
     const selected = document.getElementById("regionSelect").value;
     document.getElementById("customRegions").style.display = selected === "6" ? "block" : "none";
-  });
-
-  // Prevent label double click propagation
-  document.querySelectorAll("#customRegions input")?.forEach(cb => {
-    cb.addEventListener("click", e => e.stopPropagation());
   });
 
   // Start new round

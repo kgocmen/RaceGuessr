@@ -17,15 +17,14 @@ const regionColors = {
 export function initializeMap() {
   const map = L.map('map', {
     center: [20, 0],
-    zoom: 2.40,
-    minZoom: 2.40,
-    zoomSnap: 0.2,
-    zoomDelta: 0.2,
+    zoom: 2,
+    minZoom: 2.1,
+    zoomSnap: 0.1,
+    zoomDelta: 0.1,
     worldCopyJump: false,
-    maxBoundsViscosity: 1.0,
     maxBounds: [
-      [-90, -180],
-      [90, 180]
+      [-80, -270],
+      [80, 270]
     ]
   });
 
