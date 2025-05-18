@@ -4,16 +4,15 @@
   <title>RaceGuessr</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-  <script type="module" crossorigin src="/RaceGuessr/assets/index-DXu361H6.js"></script>
-  <link rel="stylesheet" crossorigin href="/RaceGuessr/assets/index-Dkr3g3lC.css">
+  <script type="module" crossorigin src="/RaceGuessr/assets/index-DfyDeQ-_.js"></script>
+  <link rel="stylesheet" crossorigin href="/RaceGuessr/assets/index-DdXuIWqk.css">
 </head>
 <body>
   <div id="map"></div>
   <div class="info-panel">
     <div class="info-box" id="mixBox">
-      <strong>Current Mix:</strong>
       <div>
         <label for="regionSelect">Round Type:</label>
         <select id="regionSelect">
@@ -50,8 +49,8 @@
         <button id="quitBtn">Quit</button>
         <div id="roundCounter">Round: 1 / 10</div>
       </div>
-
-      <div id="mixDescription">Click "Practice" or "Compete"</div>
+      <strong>Current Mix:</strong>
+      <div id="mixDescription">Click "Practice" to start</div>
     </div>
     <div class="guess-box" id="guessBox" style="display: none;">
       <input type="text" id="guessInput" list="popSuggestions" placeholder="Type a population name..." style="width: 100%; padding: 6px;" />
@@ -89,9 +88,9 @@
         Welcome to <strong>RaceGuessr</strong>!<br><br>
         Each round shows a synthetic mix of genetic ancestry.<br>
         Your goal is to <strong>guess the closest modern population</strong>.<br>
-        Click the map or type a population name.<br><br>
+        Click the map or type a population name.<br>
         <strong>Practice Mode:</strong> Try as many rounds as you like.<br>
-        <strong>Compete Mode:</strong> Guess through 10 rounds and get a final score!<br><br>
+        <strong>Compete Mode:</strong> Guess through 10 rounds and get a final score!<br>
         Good luck!
       </p>
       <button class="popup-btn" onclick="showPopupPage(2)">Next →</button>

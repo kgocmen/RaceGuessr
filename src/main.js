@@ -61,6 +61,20 @@ window.addEventListener("DOMContentLoaded", async () => {
   guessInput?.addEventListener("keypress", (e) => {
     if (e.key === "Enter") handleSubmit();
   });
+  // Tab
+  guessInput.addEventListener("keydown", (e) => {
+    if (e.key === "Tab") {
+      const options = document.querySelectorAll("#popSuggestions option");
+      for (const option of options) {
+        if (option.value.toLowerCase().startsWith(guessInput.value.toLowerCase())) {
+          e.preventDefault();
+          guessInput.value = option.value;
+          break;
+        }
+      }
+    }
+  });
+
 
   // Bind submit button
   document.getElementById("submitBtn")?.addEventListener("click", handleSubmit);
