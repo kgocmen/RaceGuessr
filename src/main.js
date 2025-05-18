@@ -34,17 +34,16 @@ window.addEventListener("DOMContentLoaded", async () => {
   // Helper to handle guessing logic
   function handleSubmit() {
     const normalizeInput = str => str.toLowerCase().replace(/\s+/g, '');
+
     const populationLookup = {};
     populationNames.forEach(name => {
-      const key = name.toLowerCase().replace(/[-_]/g, ''); // remove - and _
+      const key = name.toLowerCase().replace(/\s+/g, '');
       populationLookup[key] = name;
     });
 
-    // Get user input
+    
     const rawInput = document.getElementById("guessInput").value.trim();
     const cleanedInput = normalizeInput(rawInput);
-
-    // Try to find a matching population name
     const matchedName = populationLookup[cleanedInput];
 
     if (!matchedName) {
@@ -52,8 +51,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    submitGuess(matchedName); // Use the actual dataset version
-
+    submitGuess(matchedName);
   }
 
   // Bind input enter key
