@@ -1,14 +1,19 @@
+/* Base */
 body {
   margin: 0;
   font-family: sans-serif;
   position: relative;
+  overflow-x: hidden;
+  background: #fff;
+  color: #000;
 }
 
 #map {
   height: 100vh;
-  width: 100vw;
+  width: 78vw;
 }
 
+/* Side panel */
 .info-panel {
   width: 22vw;
   height: 97vh;
@@ -22,22 +27,7 @@ body {
   z-index: 999;
 }
 
-/* 📱 Mobile override */
-@media (max-width: 768px) {
-  .info-panel {
-    position: static;
-    width: 100vw;
-    height: auto;
-    box-shadow: none;
-    padding: 8px;
-    overflow-y: visible;
-  }
-
-  #map {
-    height: 60vh; /* less than full height to leave room for panel */
-  }
-}
-
+/* Info blocks */
 .info-box,
 .scoreboard,
 .result-box,
@@ -49,6 +39,7 @@ body {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Table */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -87,6 +78,7 @@ th {
   box-sizing: border-box;
 }
 
+/* Welcome popup */
 #howToPlayPopup {
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -118,7 +110,6 @@ th {
   position: relative;
 }
 
-/* Slide animation for page content */
 .slide-in {
   animation: slideIn 0.3s ease;
 }
@@ -134,7 +125,6 @@ th {
   }
 }
 
-/* Close icon */
 .popup-close {
   position: absolute;
   top: 10px;
@@ -150,18 +140,6 @@ th {
   color: black;
 }
 
-/* Region grid styling */
-.region-color-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 8px 12px;
-  font-weight: 600;
-  font-size: 0.9em;
-  text-align: left;
-  margin-top: 10px;
-}
-
-/* Buttons */
 .popup-btn {
   margin-top: 15px;
   padding: 8px 16px;
@@ -196,4 +174,59 @@ th {
   height: 14px;
   border-radius: 50%;
   margin-right: 8px;
+}
+
+/* Mobile overrides */
+@media (max-width: 768px) {
+  .info-panel {
+    position: static;
+    width: 100vw;
+    height: auto;
+    box-shadow: none;
+    padding: 8px;
+    overflow-y: visible;
+    font-size: 0.9em;
+  }
+
+  #map {
+    height: 65vh;
+    width: 100vw;
+  }
+
+  .info-box,
+  .scoreboard,
+  .result-box {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  .guess-box {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 1000;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #ccc;
+  }
+
+  .popup-container {
+    padding: 20px 15px;
+    width: 95vw;
+    font-size: 0.9em;
+  }
+
+  .popup-btn {
+    font-size: 0.95em;
+    padding: 8px 12px;
+  }
+
+  .popup-close {
+    top: 8px;
+    right: 10px;
+  }
+
+  .region-legend {
+    grid-template-columns: 1fr;
+  }
 }

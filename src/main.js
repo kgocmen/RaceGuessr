@@ -2,7 +2,7 @@ import { initializeMap } from './mapSetup.js';
 import { setupUIEvents, setupAutocomplete, setupModeButtons } from './uiControls.js';
 import { startNewRound, submitGuess } from './gameLogic.js';
 import { getHasGuessed, getMapClickable } from './state.js';
-import { loadGeoJSON } from './gameService.js';
+import { loadGeoJSON, populationNames } from './gameService.js';
 import './style.css';
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -33,12 +33,27 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   // Helper to handle guessing logic
   function handleSubmit() {
-    if (getHasGuessed()) {
-      alert("You already guessed this round!");
+    const normalizeInput = str => str.toLowerCase().replace(/\s+/g, '');
+    const populationLookup = {};
+    populationNames.forEach(name => {
+      const key = name.toLowerCase().replace(/[-_]/g, ''); // remove - and _
+      populationLookup[key] = name;
+    });
+
+    // Get user input
+    const rawInput = document.getElementById("guessInput").value.trim();
+    const cleanedInput = normalizeInput(rawInput);
+
+    // Try to find a matching population name
+    const matchedName = populationLookup[cleanedInput];
+
+    if (!matchedName) {
+      alert("That population does not exist. Please try again.");
       return;
     }
-    const input = document.getElementById("guessInput").value.trim();
-    if (input !== "") submitGuess(input);
+
+    submitGuess(matchedName); // Use the actual dataset version
+
   }
 
   // Bind input enter key

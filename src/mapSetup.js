@@ -15,20 +15,27 @@ const regionColors = {
 };
 
 export function initializeMap() {
-  const map = L.map('map').setView([30, 20], 2);
+  const map = L.map('map', {
+    center: [20, 0],
+    zoom: 2.40,
+    minZoom: 2.40,
+    zoomSnap: 0.2,
+    zoomDelta: 0.2,
+    worldCopyJump: false,
+    maxBoundsViscosity: 1.0,
+    maxBounds: [
+      [-90, -180],
+      [90, 180]
+    ]
+  });
+
+
+
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  /*   
-  fetch(`${import.meta.env.BASE_URL}ne_110m_land.geojson`)
-    .then(res => res.json())
-    .then(data => {
-      L.geoJSON(data, {
-        style: { color: '#999', weight: 1, fillColor: '#ddd', fillOpacity: 0.6 }
-      }).addTo(map);
-    }); */
 
   fetch(`${import.meta.env.BASE_URL}illu_modern_points.geojson`)
     .then(res => res.json())
@@ -47,11 +54,26 @@ export function initializeMap() {
         onEachFeature: (feature, layer) => {
           const name = feature.properties.Population;
           const region = feature.properties.Region;
-          layer.bindTooltip(`<strong>${name}</strong><br>Region: ${region}`);
-          layer.on('click', () => {
+          layer.bindTooltip(
+            `<strong>${name}</strong><br>Region: ${region}`,
+            {
+              direction: 'top',
+              sticky: true,
+              className: 'custom-tooltip'
+            }
+          );
+          const triggerGuess = () => {
             if (typeof window.submitGuess === "function") {
               window.submitGuess(name);
-          }});
+            }
+          };
+
+          layer.on('click', triggerGuess);
+          layer.on('touchend', (e) => {
+            // Prevent duplicate firing on mobile devices
+            e.originalEvent.preventDefault();
+            triggerGuess();
+          });
         }
       }).addTo(map);
     });
