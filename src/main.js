@@ -57,7 +57,20 @@ window.addEventListener("DOMContentLoaded", async () => {
   // Bind input enter key
   const guessInput = document.getElementById("guessInput");
   guessInput?.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") handleSubmit();
+    if (e.key === "Enter") {
+      if (getHasGuessed()) {
+        const nextBtn = document.getElementById("nextRoundBtn");
+        if (nextBtn && !nextBtn.disabled) {
+          nextBtn.click(); // automatically advance if in compete mode
+        }
+        const pracBtn = document.getElementById("practiceBtn");
+        if (pracBtn && !pracBtn.disabled) {
+          pracBtn.click(); // automatically advance if in practice mode
+        }
+      } else {
+        handleSubmit(); // normal guess submission
+      }
+    }
   });
   // Tab
   guessInput.addEventListener("keydown", (e) => {
